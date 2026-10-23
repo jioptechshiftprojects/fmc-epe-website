@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react"
 import type { FormEvent } from "react";
 import { supabase } from "../lib/supabase";
 import { feedbackSchema } from "../lib/schemas";
