@@ -72,3 +72,14 @@ export function mediaUrl(path: string | null | undefined): string | null {
   const { data } = supabase.storage.from("public-media").getPublicUrl(path);
   return data.publicUrl;
 }
+
+/** Open a protected-documents file (e.g. fee evidence) in a new tab via a short-lived signed URL. Admin only. */
+export async function openEvidence(path: string | null | undefined) {
+  if (!path) return;
+  const { data, error } = await supabase.storage.from("protected-documents").createSignedUrl(path, 120);
+  if (error || !data?.signedUrl) {
+    alert("Could not open evidence: " + (error?.message ?? "unknown error"));
+    return;
+  }
+  window.open(data.signedUrl, "_blank");
+}

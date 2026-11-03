@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Appointments from "./pages/Appointments";
 import ConnectionTest from "./pages/ConnectionTest";
 import TrainingHome from "./pages/TrainingHome";
+import SearchPage from "./pages/SearchPage";
 import TrainingProgram from "./pages/TrainingProgram";
 import NursingApply from "./pages/NursingApply";
 import PortalGuard from "./portal/PortalGuard";
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/connection-test" element={<ConnectionTest />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/training" element={<TrainingHome />} />
           <Route path="/training/:slug" element={<TrainingProgram />} />
           <Route path="/training/nursing/apply" element={<NursingApply />} />

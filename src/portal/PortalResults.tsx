@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useQuery } from "../lib/hooks";
 import { useStudent } from "./useStudent";
 
 export default function PortalResults() {
   const { profile } = useStudent();
+  const [q, setQ] = useState("");
   const { data: results } = useQuery(
     () =>
       profile
@@ -14,14 +16,24 @@ export default function PortalResults() {
 
   if (!profile) return null;
   const bySession = new Map<string, any[]>();
-  (results ?? []).forEach((r) => {
+  (results ?? [])
+    .filter((r) => !q || (r.course_code + " " + r.course_title + " " + r.session_label).toLowerCase().includes(q.toLowerCase()))
+    .forEach((r) => {
     if (!bySession.has(r.session_label)) bySession.set(r.session_label, []);
     bySession.get(r.session_label)!.push(r);
   });
 
   return (
     <div className="max-w-3xl">
-      <h1 className="mb-1 text-xl font-bold text-forest-800">My Results</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-xl font-bold text-forest-800">My Results</h1>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Filter by course or session…"
+          className="ml-auto w-44 rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500"
+        />
+      </div>
       <p className="mb-5 text-sm text-forest-900/60">Published by the school. Contact the school office about any discrepancies.</p>
       {bySession.size === 0 && (
         <div className="rounded-xl border border-dashed border-forest-200 bg-white/60 px-6 py-10 text-center">

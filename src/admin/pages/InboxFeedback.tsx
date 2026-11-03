@@ -9,6 +9,7 @@ export default function InboxFeedback() {
   const editable = can(["super_admin", "hr_admin"]);
   const [filter, setFilter] = useState("new");
   const [rows, setRows] = useState<any[] | null>(null);
+  const [q, setQ] = useState("");
 
   async function load() {
     let q = supabase.from("feedback_submissions").select("*").order("created_at", { ascending: false });
@@ -23,6 +24,11 @@ export default function InboxFeedback() {
     await supabase.from("feedback_submissions").update({ status }).eq("id", id);
     load();
   }
+
+  const shown =
+    rows && q
+      ? rows.filter((r) => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))
+      : rows;
 
   const fmt = (d: string | null) => (d ? new Date(d).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }) : "—");
   const tab = (v: string) => (
@@ -41,15 +47,21 @@ export default function InboxFeedback() {
       <p className="mb-4 text-sm text-forest-900/60">
         Complaints, compliments, enquiries and suggestions from the public.
       </p>
-      <div className="mb-4 flex flex-wrap gap-2">{["all", ...STATUSES].map(tab)}</div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">{["all", ...STATUSES].map(tab)}</div>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search message or sender…"
+          className="ml-auto w-44 rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500"
+        />
       {!rows && <p className="py-10 text-center text-sm text-forest-900/50">Loading…</p>}
-      {rows && rows.length === 0 && (
+      {shown && shown.length === 0 && (
         <div className="rounded-xl border border-dashed border-forest-200 bg-white/60 px-6 py-10 text-center text-sm text-forest-900/60">
           No {filter === "all" ? "" : filter.replace("_", " ") + " "}messages.
         </div>
       )}
       <div className="space-y-3">
-        {rows?.map((r) => (
+        {shown?.map((r) => (
           <div key={r.id} className="card !p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0 flex-1">

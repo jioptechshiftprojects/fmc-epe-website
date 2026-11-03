@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { useAdmin } from "../../lib/auth";
 import { ENTITIES, slugify } from "../config";
+import StudentDetail from "../StudentDetail";
 import type { Field, FieldType } from "../config";
 
 export default function CrudPage() {
@@ -20,6 +21,12 @@ export default function CrudPage() {
   const [deptNames, setDeptNames] = useState<Record<string, string>>({});
 
   const editable = cfg ? can(cfg.roles) : false;
+  const [q, setQ] = useState("");
+  const [viewing, setViewing] = useState<any | null>(null);
+  const shown =
+    rows && q
+      ? rows.filter((r) => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))
+      : rows;
 
   async function load() {
     if (!cfg) return;
@@ -170,20 +177,28 @@ export default function CrudPage() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex flex-wrap items-center gap-3">
         <h1 className="text-xl font-bold text-forest-800">{cfg.title}</h1>
-        <span className="text-xs text-forest-900/50">{rows ? `${rows.length} record(s)` : ""}</span>
-        {editable && <button className="btn-primary ml-auto text-xs" onClick={openNew}>+ New</button>}
+        <span className="text-xs text-forest-900/50">{shown ? `${shown.length} record(s)` : ""}</span>
+        <div className="ml-auto flex items-center gap-2">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search…"
+            className="w-36 rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500"
+          />
+          {editable && <button className="btn-primary text-xs" onClick={openNew}>+ New</button>}
+        </div>
       </div>
       {loadError && <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{loadError}</p>}
       {!rows && !loadError && <p className="py-10 text-center text-sm text-forest-900/50">Loading…</p>}
-      {rows && rows.length === 0 && (
+      {shown && shown.length === 0 && (
         <div className="rounded-xl border border-dashed border-forest-200 bg-white/60 px-6 py-10 text-center">
           <p className="font-semibold text-forest-800">Nothing here yet</p>
           <p className="text-sm text-forest-900/60">{editable ? `Tap “+ New” to create the first ${cfg.title.toLowerCase()} entry.` : "No records."}</p>
         </div>
       )}
-      {rows && rows.length > 0 && (
+      {shown && shown.length > 0 && (
         <div className="card overflow-x-auto p-0">
           <table className="w-full text-left text-sm">
             <thead>
@@ -193,12 +208,15 @@ export default function CrudPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {shown?.map((r) => (
                 <tr key={r.id} className="border-b border-forest-50 last:border-0 hover:bg-cream-50">
                   {cfg.listFields.map((lf) => <td key={lf} className="px-4 py-2.5 align-top">{cell(lf, r)}</td>)}
                   <td className="px-4 py-2.5 text-right whitespace-nowrap align-top">
                     {editable && (
                       <button onClick={() => openEdit(r)} className="text-xs font-bold text-forest-700 underline underline-offset-2">Edit</button>
+                    )}
+                    {cfg.key === "students" && (
+                      <button onClick={() => setViewing(r)} className="ml-3 text-xs font-bold text-gold-600 underline underline-offset-2">View</button>
                     )}
                     {role === "super_admin" && (
                       <button onClick={() => remove(r)} className="ml-3 text-xs font-bold text-red-600 underline underline-offset-2">Delete</button>
@@ -210,6 +228,7 @@ export default function CrudPage() {
           </table>
         </div>
       )}
+      {viewing && <StudentDetail student={viewing} onClose={() => setViewing(null)} />}
     </div>
   );
 }

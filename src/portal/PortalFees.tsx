@@ -13,6 +13,7 @@ export default function PortalFees() {
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
   const [tick, setTick] = useState(0);
+  const [q, setQ] = useState("");
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [inputKey, setInputKey] = useState(0);
 
@@ -106,14 +107,22 @@ export default function PortalFees() {
         <button type="button" className="btn-primary" onClick={submit} disabled={busy}>{busy ? "Submitting..." : "Submit evidence"}</button>
       </div>
 
-      <h2 className="mb-3 text-lg font-bold text-forest-800">Submission history</h2>
+      <div className="flex flex-wrap items-center gap-3">
+        <h2 className="text-lg font-bold text-forest-800">Submission history</h2>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Filter by session or status…"
+          className="ml-auto w-44 rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500"
+        />
+      </div>
       {(!fees || fees.length === 0) && (
         <p className="rounded-xl border border-dashed border-forest-200 bg-white/60 px-6 py-8 text-center text-sm text-forest-900/60">
           No fee evidence submitted yet.
         </p>
       )}
       <div className="space-y-3">
-        {fees?.map((f) => (
+        {fees?.filter((f) => !q || (f.kind + ' ' + f.session_label + ' ' + f.status).toLowerCase().includes(q.toLowerCase())).map((f) => (
           <div key={f.id} className="card !p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>

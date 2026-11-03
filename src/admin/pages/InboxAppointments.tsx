@@ -9,6 +9,7 @@ export default function InboxAppointments() {
   const editable = can(["super_admin", "content_admin"]);
   const [filter, setFilter] = useState("new");
   const [rows, setRows] = useState<any[] | null>(null);
+  const [q, setQ] = useState("");
   const [depts, setDepts] = useState<Record<string, string>>({});
 
   async function load() {
@@ -33,6 +34,11 @@ export default function InboxAppointments() {
     load();
   }
 
+  const shown =
+    rows && q
+      ? rows.filter((r) => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))
+      : rows;
+
   const fmt = (d: string | null) => (d ? new Date(d).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }) : "—");
   const tab = (v: string) => (
     <button
@@ -50,15 +56,21 @@ export default function InboxAppointments() {
       <p className="mb-4 text-sm text-forest-900/60">
         Website submissions appear here as “new”. Call the patient to arrange the slot, then mark “confirmed”.
       </p>
-      <div className="mb-4 flex flex-wrap gap-2">{["all", ...STATUSES].map(tab)}</div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">{["all", ...STATUSES].map(tab)}</div>
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search name, phone or reason…"
+          className="ml-auto w-44 rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-gold-500"
+        />
       {!rows && <p className="py-10 text-center text-sm text-forest-900/50">Loading…</p>}
-      {rows && rows.length === 0 && (
+      {shown && shown.length === 0 && (
         <div className="rounded-xl border border-dashed border-forest-200 bg-white/60 px-6 py-10 text-center text-sm text-forest-900/60">
           No {filter === "all" ? "" : filter + " "}requests.
         </div>
       )}
       <div className="space-y-3">
-        {rows?.map((r) => (
+        {shown?.map((r) => (
           <div key={r.id} className="card !p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>

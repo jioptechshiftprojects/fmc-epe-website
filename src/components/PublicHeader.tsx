@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const NAV: { to: string; label: string; end?: boolean }[] = [
   { to: "/", label: "Home", end: true },
@@ -18,6 +18,8 @@ const NAV: { to: string; label: string; end?: boolean }[] = [
 
 export default function PublicHeader() {
   const [open, setOpen] = useState(false);
+  const nav = useNavigate();
+  const [q, setQ] = useState("");
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-md px-2.5 py-1.5 text-sm font-medium transition ${
       isActive ? "bg-forest-800 text-gold-400" : "text-cream/90 hover:bg-forest-700 hover:text-white"
@@ -38,6 +40,21 @@ export default function PublicHeader() {
         </Link>
 
         <div className="ml-auto flex items-center gap-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const query = q.trim();
+              if (query) nav(`/search?q=${encodeURIComponent(query)}`);
+            }}
+            className="hidden sm:block"
+          >
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search the site…"
+              className="w-36 rounded-lg border border-cream/30 bg-forest-600/60 px-3 py-2 text-xs text-cream placeholder:text-cream/50 focus:outline-none focus:ring-2 focus:ring-gold-500 lg:w-44"
+            />
+          </form>
           <Link to="/appointments" className="hidden rounded-lg bg-gold-500 px-4 py-2 text-sm font-bold text-forest-900 transition hover:bg-gold-400 md:inline-block">
             Book Appointment
           </Link>
@@ -62,6 +79,21 @@ export default function PublicHeader() {
           <Link to="/appointments" className="mt-1 rounded-lg bg-gold-500 px-4 py-2 text-center text-sm font-bold text-forest-900 md:hidden" onClick={() => setOpen(false)}>
             Book Appointment
           </Link>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const query = q.trim();
+              if (query) { setOpen(false); nav(`/search?q=${encodeURIComponent(query)}`); }
+            }}
+            className="mt-2 sm:hidden"
+          >
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search the site…"
+              className="w-full rounded-lg border border-cream/30 bg-forest-600/60 px-3 py-2 text-xs text-cream placeholder:text-cream/50 focus:outline-none focus:ring-2 focus:ring-gold-500"
+            />
+          </form>
         </nav>
       </div>
     </header>
