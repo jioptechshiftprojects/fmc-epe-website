@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { openEvidence } from "../../lib/api";
 import { useAdmin } from "../../lib/auth";
 import { ENTITIES, slugify } from "../config";
 import StudentDetail from "../StudentDetail";
@@ -217,6 +218,9 @@ export default function CrudPage() {
                     )}
                     {cfg.key === "students" && (
                       <button onClick={() => setViewing(r)} className="ml-3 text-xs font-bold text-gold-600 underline underline-offset-2">View</button>
+                    )}
+                    {cfg.key === "fees" && r.evidence_path && (
+                      <button onClick={() => void openEvidence(r.evidence_path)} className="ml-3 text-xs font-bold text-gold-600 underline underline-offset-2">Evidence</button>
                     )}
                     {role === "super_admin" && (
                       <button onClick={() => remove(r)} className="ml-3 text-xs font-bold text-red-600 underline underline-offset-2">Delete</button>

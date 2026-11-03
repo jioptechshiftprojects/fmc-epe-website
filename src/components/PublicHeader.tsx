@@ -7,7 +7,7 @@ const NAV: { to: string; label: string; end?: boolean }[] = [
   { to: "/departments", label: "Departments" },
   { to: "/services", label: "Services" },
   { to: "/training", label: "Training" },
-  { to: "/staff", label: "Our Team" },
+  { to: "/staff", label: "Management" },
   { to: "/news", label: "News" },
   { to: "/events", label: "Events" },
   { to: "/careers", label: "Careers" },

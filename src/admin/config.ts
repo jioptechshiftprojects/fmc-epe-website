@@ -65,6 +65,7 @@ export const ENTITIES: EntityConfig[] = [
       { name: "email", label: "Email", type: "text" },
       { name: "display_order", label: "Display order", type: "number" },
       { name: "is_public", label: "Visible to public", type: "boolean" },
+      { name: "is_management", label: "Management team member", type: "boolean" },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, required: true },
     ],
   },

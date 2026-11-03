@@ -7,7 +7,7 @@ export default function AdminLayout({ role, name, children }: { role: string; na
   const { signOut } = useAdmin();
   const link = ({ isActive }: { isActive: boolean }) =>
     `rounded-lg px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition ${
-      isActive ? "bg-forest-700 text-white" : "text-forest-800 hover:bg-forest-100"
+      isActive ? "bg-forest-900 text-gold-400" : "text-cream/90 hover:bg-forest-600 hover:text-white"
     }`;
 
   return (
