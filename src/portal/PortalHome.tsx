@@ -7,11 +7,17 @@ export default function PortalHome() {
   const { profile, userId } = useStudent();
 
   const { data: fees } = useQuery(
-    () => supabase.from("fee_payments").select("*").eq("student_id", profile!.id).order("created_at", { ascending: false }),
+    () =>
+      profile
+        ? supabase.from("fee_payments").select("*").eq("student_id", profile.id).order("created_at", { ascending: false })
+        : Promise.resolve({ data: null, error: null }),
     [profile?.id]
   );
   const { data: results } = useQuery(
-    () => supabase.from("academic_results").select("*").eq("student_id", profile!.id).order("created_at", { ascending: false }),
+    () =>
+      profile
+        ? supabase.from("academic_results").select("*").eq("student_id", profile.id).order("created_at", { ascending: false })
+        : Promise.resolve({ data: null, error: null }),
     [profile?.id]
   );
 

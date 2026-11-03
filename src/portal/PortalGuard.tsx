@@ -1,8 +1,14 @@
+import { useEffect, useState } from "react";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import { useStudent } from "./useStudent";
 
 export default function PortalGuard() {
   const { loading, userId, profile, signOut } = useStudent();
+  const [sessionEmail, setSessionEmail] = useState("");
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data }) => setSessionEmail(data.session?.user?.email ?? ""));
+  }, [userId]);
 
   if (loading) return <main className="px-4 py-24 text-center text-sm text-forest-900/60">Checking your session...</main>;
   if (!userId) return <Navigate to="/portal/login" replace />;
@@ -11,9 +17,15 @@ export default function PortalGuard() {
       <main className="mx-auto max-w-md px-4 py-24 text-center">
         <h1 className="text-xl font-bold text-forest-800">Student account required</h1>
         <p className="mt-2 text-sm text-forest-900/65">
-          This account is not linked to a student profile. Please{" "}
+          The signed-in account ({sessionEmail}) is not linked to a student profile. Please{" "}
           <NavLink to="/training/nursing/apply" className="font-bold underline">apply for admission</NavLink> first.
         </p>
+        <button
+          onClick={() => void supabase.auth.signOut()}
+          className="btn-outline mt-5 text-xs"
+        >
+          Sign out and use a different account
+        </button>
       </main>
     );
 

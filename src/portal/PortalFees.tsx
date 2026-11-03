@@ -17,7 +17,10 @@ export default function PortalFees() {
   const [inputKey, setInputKey] = useState(0);
 
   const { data: fees } = useQuery(
-    () => supabase.from("fee_payments").select("*").eq("student_id", profile!.id).order("created_at", { ascending: false }),
+    () =>
+      profile
+        ? supabase.from("fee_payments").select("*").eq("student_id", profile.id).order("created_at", { ascending: false })
+        : Promise.resolve({ data: null, error: null }),
     [profile?.id, tick]
   );
   const refresh = () => setTick((t) => t + 1);

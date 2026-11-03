@@ -5,7 +5,10 @@ import { useStudent } from "./useStudent";
 export default function PortalResults() {
   const { profile } = useStudent();
   const { data: results } = useQuery(
-    () => supabase.from("academic_results").select("*").eq("student_id", profile!.id).order("created_at", { ascending: false }),
+    () =>
+      profile
+        ? supabase.from("academic_results").select("*").eq("student_id", profile.id).order("created_at", { ascending: false })
+        : Promise.resolve({ data: null, error: null }),
     [profile?.id]
   );
 
