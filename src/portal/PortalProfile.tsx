@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { supabase } from "../lib/supabase";
+import { mediaUrl } from "../lib/api";
 import { useStudent } from "./useStudent";
 
 export default function PortalProfile() {
@@ -86,6 +87,9 @@ export default function PortalProfile() {
           <div>
             <label className="mb-1 block text-sm font-semibold text-forest-800">Photo URL or path (optional)</label>
             <input className={input} placeholder="/assets/... or https://..." value={form.photo_path ?? ""} onChange={(e) => set("photo_path", e.target.value)} />
+            {mediaUrl(form.photo_path) && (
+              <img src={mediaUrl(form.photo_path) ?? ""} alt="Profile preview" className="mt-2 h-16 w-16 rounded-full border-2 border-gold-500 object-cover" />
+            )}
           </div>
         </div>
         <div>

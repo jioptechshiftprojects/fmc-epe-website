@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { mediaUrl } from "../lib/api";
 import { useStudent } from "./useStudent";
 
 export default function PortalGuard() {
@@ -43,7 +44,17 @@ export default function PortalGuard() {
             <p className="text-sm font-bold text-white">FMC Epe · Student Portal</p>
             <p className="text-[11px] text-gold-400 capitalize">{profile.category} student</p>
           </div>
-          <button onClick={() => void signOut()} className="ml-auto rounded-lg bg-forest-800 px-3 py-1.5 text-xs font-semibold text-cream hover:bg-forest-900">
+          {(() => {
+            const photo = mediaUrl(profile.photo_path);
+            return photo ? (
+              <img src={photo} alt={profile.full_name} className="ml-auto h-9 w-9 rounded-full border-2 border-gold-500 object-cover" />
+            ) : (
+              <span className="ml-auto flex h-9 w-9 items-center justify-center rounded-full border-2 border-gold-500 bg-forest-600 text-xs font-bold text-white">
+                {profile.full_name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+              </span>
+            );
+          })()}
+          <button onClick={() => void signOut()} className="rounded-lg bg-forest-800 px-3 py-1.5 text-xs font-semibold text-cream hover:bg-forest-900">
             Sign out
           </button>
         </div>

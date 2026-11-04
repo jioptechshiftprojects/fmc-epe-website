@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { openEvidence } from "../lib/api";
+import { mediaUrl, openEvidence } from "../lib/api";
 
 export default function StudentDetail({ student, onClose }: { student: any; onClose: () => void }) {
   const [fees, setFees] = useState<any[] | null>(null);
@@ -31,9 +31,21 @@ export default function StudentDetail({ student, onClose }: { student: any; onCl
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4" onClick={onClose}>
       <div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-cream-50 p-5 shadow-2xl sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-bold text-forest-800">{student.full_name}</h2>
-            <p className="text-xs text-forest-900/55 capitalize">{student.category} student · {student.admission_status?.replace("_", " ")}</p>
+          <div className="flex items-center gap-3">
+            {(() => {
+              const photo = mediaUrl(student.photo_path);
+              return photo ? (
+                <img src={photo} alt={student.full_name} className="h-12 w-12 rounded-full border-2 border-gold-500 object-cover" />
+              ) : (
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold-500 bg-forest-600 text-sm font-bold text-white">
+                  {student.full_name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                </span>
+              );
+            })()}
+            <div>
+              <h2 className="text-lg font-bold text-forest-800">{student.full_name}</h2>
+              <p className="text-xs text-forest-900/55 capitalize">{student.category} student · {student.admission_status?.replace("_", " ")}</p>
+            </div>
           </div>
           <button onClick={onClose} className="rounded-lg border border-forest-100 bg-white px-3 py-1.5 text-xs font-bold text-forest-700">Close</button>
         </div>
