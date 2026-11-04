@@ -18,6 +18,7 @@ import Appointments from "./pages/Appointments";
 import ConnectionTest from "./pages/ConnectionTest";
 import TrainingHome from "./pages/TrainingHome";
 import SearchPage from "./pages/SearchPage";
+import ResetPassword from "./pages/ResetPassword";
 import TrainingProgram from "./pages/TrainingProgram";
 import NursingApply from "./pages/NursingApply";
 import PortalGuard from "./portal/PortalGuard";
@@ -35,6 +36,7 @@ import CrudPage from "./admin/pages/CrudPage";
 import MediaLibrary from "./admin/pages/Media";
 import AdminsPage from "./admin/pages/Admins";
 import AuditLog from "./admin/pages/AuditLog";
+import ResultUpload from "./admin/pages/ResultUpload";
 
 export default function App() {
   return (
@@ -58,6 +60,7 @@ export default function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/connection-test" element={<ConnectionTest />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/training" element={<TrainingHome />} />
           <Route path="/training/:slug" element={<TrainingProgram />} />
           <Route path="/training/nursing/apply" element={<NursingApply />} />
@@ -77,6 +80,7 @@ export default function App() {
             <Route path="media" element={<MediaLibrary />} />
             <Route path="admins" element={<AdminsPage />} />
             <Route path="audit" element={<AuditLog />} />
+            <Route path="upload-results" element={<ResultUpload />} />
           </Route>
           <Route path="*" element={<Home />} />
         </Route>

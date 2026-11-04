@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { openEvidence } from "../../lib/api";
 import { useAdmin } from "../../lib/auth";
@@ -182,6 +182,11 @@ export default function CrudPage() {
         <h1 className="text-xl font-bold text-forest-800">{cfg.title}</h1>
         <span className="text-xs text-forest-900/50">{shown ? `${shown.length} record(s)` : ""}</span>
         <div className="ml-auto flex items-center gap-2">
+          {cfg.key === "results" && (
+            <Link to="/admin/upload-results" className="rounded-lg border border-gold-500 px-3 py-1.5 text-xs font-bold text-gold-600 hover:bg-gold-100">
+              Bulk upload →
+            </Link>
+          )}
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}

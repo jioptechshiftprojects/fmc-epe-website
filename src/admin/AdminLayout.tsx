@@ -33,6 +33,9 @@ export default function AdminLayout({ role, name, children }: { role: string; na
           {(role === "super_admin" || role === "content_admin") && (
             <NavLink to="/admin/media" className={link}>Media</NavLink>
           )}
+          {(role === "super_admin" || role === "content_admin") && (
+            <NavLink to="/admin/upload-results" className={link}>Upload Results</NavLink>
+          )}
           {role === "super_admin" && (
             <>
               <NavLink to="/admin/admins" className={link}>Admins</NavLink>
