@@ -199,6 +199,7 @@ export const ENTITIES: EntityConfig[] = [
       { name: "phone", label: "Phone", type: "text" },
       { name: "current_year", label: "Current year/session number", type: "number" },
       { name: "current_session", label: "Session label (e.g. 2026/2027)", type: "text" },
+      { name: "photo_path", label: "Photo path or URL (Media library path, /assets/... or https://...)", type: "text" },
       { name: "category", label: "Category", type: "select", options: ["applicant", "fresh", "returning"], required: true },
       { name: "admission_status", label: "Admission status", type: "select", options: ["submitted", "under_review", "admitted", "rejected"], required: true },
     ],

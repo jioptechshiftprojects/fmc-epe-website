@@ -68,6 +68,8 @@ export const api = {
 /** Resolve a storage path in the public-media bucket to a public URL. */
 export function mediaUrl(path: string | null | undefined): string | null {
   if (!path) return null;
+  path = path.trim();
+  if (path === "") return null;
   if (path.startsWith("http") || path.startsWith("/")) return path;
   const { data } = supabase.storage.from("public-media").getPublicUrl(path);
   return data.publicUrl;
